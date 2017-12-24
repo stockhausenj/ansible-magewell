@@ -1,2 +1,14 @@
 ---
-# tasks file for magewell
+- name: Download and Unarchive Magewell Source Archive
+  unarchive:
+    src: "{{ magewell_src_url }}"
+    dest: /tmp/magewell-src
+    remote_src: yes
+    creates: /usr/bin/mwcap-info
+
+- name: Run Magewell Install Script
+  shell: bash install.sh 
+  args:
+    chdir: /tmp/magewell-src/
+    creates: /usr/bin/mwcap-info
+  become: true
