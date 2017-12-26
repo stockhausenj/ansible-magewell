@@ -1,14 +1,29 @@
 ---
+- name: Install the package make
+  apt:
+    name: make
+    state: present
+- name: Install the package gcc
+  apt:
+    name: gcc
+    state: present
+- file:
+    path: /tmp/magewell-src
+    state: directory
+    mode: 0755
+
 - name: Download and Unarchive Magewell Source Archive
   unarchive:
-    src: "{{ magewell_src_url }}"
-    dest: /tmp/magewell-src
+    src: "{{ magewell_src }}"
+    dest: /tmp/magewell-src/
     remote_src: yes
     creates: /usr/bin/mwcap-info
 
 - name: Run Magewell Install Script
-  shell: bash install.sh 
+  shell: cd /tmp/magewell-src/* && bash install.sh
   args:
-    chdir: /tmp/magewell-src/
     creates: /usr/bin/mwcap-info
-  become: true
+
+- file:
+    path: /tmp/magewell-src
+    state: absent
